@@ -1,0 +1,7 @@
+.bloop/
+.metals/
+.scalafmt.conf
+fol/target/
+lcf/target/
+project/
+target/
