@@ -1,3 +1,28 @@
+Given a formula `F` we are able to do the following transformations:
+
+```scala
+F_nnf = toNNF(F)
+F_pnf = toPNF(F_nnf)
+F_snf = toSNF(F_pnf)
+```
+
+where `NNF` means `Negation Normal Form`, `PNF` means `Prenex Normal Form` and `SNF` means `Skolem Normal Form`.
+
+We are also able to generate the following theorems:
+
+```scala
+F     <=> F_nnf
+F_nnf <=> F_pnf
+```
+
+and thus also
+
+```scala
+F <=> F_pnf
+```
+
+---
+
 In `fol/src/main/scala/fol/Formulas.scala` we added the following values that compute a set of all identifiers in a given formula (constants, vars, functions, predicates):
 
 ```scala
