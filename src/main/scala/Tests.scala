@@ -64,6 +64,20 @@ object Tests {
     }
     return true
   }
+  def checkNNFTheorem(f: Formula): Boolean = {
+    val nf = toNNF(f)
+    lazy val prettyF = f.pretty
+    toNNF_thm(f).formula match {
+      case Iff(f1, f2) =>
+        assert(f1 == f, s"The left-hand-side of `toNNF_Thm($prettyF)` should be $prettyF. Got ${f1.pretty} instead.")
+        assert(f2 == nf, s"The right-hand side of `toNNF_Thm($prettyF)` should be ${nf.pretty}. Got ${f2.pretty} instead.")
+        assert(isNNF(nf), s"The NNF of $f should be in NNF. Got ${nf.pretty} instead.")
+      case _ =>
+        throw new Exception(s"`toNNF_Thm($prettyF)` should return an `Iff` formula")
+    }
+    true
+  }
+
 
   def testIsPNF() {
     assert(isPNF(True))

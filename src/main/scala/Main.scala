@@ -5,6 +5,10 @@ import Theorems._
 
 object Main {
   def main(args: Array[String]): Unit = {
+    val predicates: Array[Predicate] = Array("p", "q", "r", "s", "t", "u")
+    val functions: Array[Predicate] = Array("f", "g", "h", "i", "j")
+    val constants: Array[Constant] = Array("a", "b", "c", "d", "e", "f")
+    val ids: Array[Identifier] = Array("x", "y", "z", "x1", "x2")
     // testIsPNF()
     // testUniqueVars()
     // testToPNF()
@@ -12,6 +16,25 @@ object Main {
     // testToPNFThm()
     // testIsSNF()
     // testToSNF()
+    println("================== \n NNF Fixed tests:")
+    assert(testThese(Seq(
+      fol"¬( ∀z. c)",
+      fol"((b ⇔ ¬(∀z. c)))",
+      fol"(a ∨ (b ⇔ ¬(∀z. c)))",
+      fol"(⊤ ∨ (⊥ ⇔ ¬(∀z. ⊥ ⇔ ⊤))) ∧ g(z) = g(y)",
+      fol"¬(∃x. ⊤)",
+      fol"¬(a /\ b)",
+      fol"¬(a \/ b)",
+      fol"¬(a => b)",
+      fol"¬(a <=> b)",
+      fol"¬(∀z. (a /\ b))",
+      fol"¬(∃z. (a /\ b))",
+      fol"¬(∃x. ⊤) ∨ ⊤",
+      fol"¬(∃x. g('b, 'a) = 'a) ∨ ⊤",
+    ), (f: Formula) => f.pretty, checkNNFTheorem))
+    println("================== \n NNF tests:")
+    assert(testRandom(100000, (f: Formula) => f.pretty, Formula.random(predicates, functions, constants, ids), checkNNFTheorem))
+    
   }
 }
 

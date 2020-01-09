@@ -19,8 +19,8 @@ object NNF {
         case And(lhs, rhs) => isNNF(lhs) && isNNF(rhs)
         case Exists(id, inner) => isNNF(inner)
         case Forall(id, inner) => isNNF(inner)
-        case Iff(lhs, rhs) => isNNF(lhs) && isNNF(rhs)
-        case Implies(lhs, rhs) => isNNF(lhs) && isNNF(rhs)
+        //case Iff(lhs, rhs) => isNNF(lhs) && isNNF(rhs)
+        //case Implies(lhs, rhs) => isNNF(lhs) && isNNF(rhs)
         case Or(lhs, rhs) => isNNF(lhs) && isNNF(rhs)
         case Not(f) if isAtomic(f) => true
         case _ => false 
@@ -45,8 +45,11 @@ object NNF {
     // Recursive transformation
     case And(p,q) => And(toNNF(p), toNNF(q))
     case Or(p,q) => Or(toNNF(p), toNNF(q))
-    case Implies(p, q) => Implies(toNNF(p), toNNF(q))
-    case Iff(p, q) => Iff(toNNF(p), toNNF(q))
+    case Implies(p, q) => Or(toNNF(Not(p)), toNNF(q))
+    case Iff(p, q) => {
+      val (pn1, qn1) = (toNNF(Not(p)), toNNF(q))
+      val (pn2, qn2) = (toNNF(p), toNNF(Not(q)))
+      And(Or(pn1, qn1), Or(qn2, pn2)) }
     case Forall(x, p) => Forall(x, toNNF(p))
     case Exists(x, p) => Exists(x, toNNF(p))
   }
@@ -88,15 +91,22 @@ object NNF {
     // Recursive transformation
     case (And(p,q), And(pn, qn)) => andIff2(tnnfth(p, pn), tnnfth(q, qn))
     case (Or(p,q), Or(pn, qn)) => orIff2(tnnfth(p, pn), tnnfth(q, qn))
-    case (Implies(p, q), Implies(pn, qn)) => addConclusionIff(tnnfth(p, pn), tnnfth(q, qn))
-    case (Iff(p, q), Iff(pn, qn)) => 
-      val ppn = tnnfth(p, pn)
-      val qqn = tnnfth(q, qn)
+    case (Implies(p, q), Or(pn, qn)) => iffTrans(
+      orImpliesIff(p, q), 
+      orIff2(tnnfth(Not(p), pn), tnnfth(q, qn))
+    )
+    case (Iff(p, q), And(Or(pn1, qn1), Or(qn2, pn2))) => 
+      val ppn1 = tnnfth(Not(p), pn1)
+      val qqn1 = tnnfth(q, qn1)
+      val ppn2 = tnnfth(p, pn2)
+      val qqn2 = tnnfth(Not(q), qn2)
       iffTrans(
         iffIff(p, q), 
-        iffTrans(
-          andIff2(addConclusionIff(ppn, qqn), addConclusionIff(qqn, ppn)), 
-          iffSym(iffIff(pn, qn))))
+        iffTrans( //(p => q) /\ (q => p)
+          andIff2(orImpliesIff(p, q), orImpliesIff(q, p)), // (~p \/ q) /\ (p \/ ~q)
+          andIff2(orIff2(ppn1, qqn1), orIff2(qqn2, ppn2))
+        )
+      )
     case (Forall(x, p), Forall(xn, pn)) if (x == xn) => forallIff(x, tnnfth(p, pn))
     case (Exists(x, p), Exists(xn, pn)) if (x == xn) => existsIff2(x, tnnfth(p, pn))
 
