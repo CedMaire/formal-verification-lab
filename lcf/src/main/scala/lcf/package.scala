@@ -239,13 +239,27 @@ package object lcf {
   def forallDistriAnd(x: Identifier, p: Formula, q: Formula): Theorem =
     Theorem(Iff(Forall(x, And(p, q)), And(Forall(x, p), Forall(x, q))))
 
-  /** Axiom `exists x. (P /\ Q) <=> (exists x. P /\ exists x. Q)`. */
-  def existsDistriAnd(x: Identifier, p: Formula, q: Formula): Theorem =
-    Theorem(Iff(Exists(x, And(p, q)), And(Exists(x, p), Exists(x, q))))
+  /** Axiom `exists x. (P /\ Q) <=> (exists x. P /\ exists x. Q)`, given that x is not an identifier in both P and Q. */
+  def existsDistriAnd(x: Identifier, p: Formula, q: Formula): Theorem = {
+    if (p.ids.contains(x) && q.ids.contains(x)) {
+      throw new IllegalArgumentException(
+        "Illegal application of existsDistriAnd: identifier is in both formulae P and Q."
+      )
+    }
 
-  /** Axiom `forall x. (P \/ Q) <=> (forall x. P \/ forall x. Q)`. */
-  def forallDistriOr(x: Identifier, p: Formula, q: Formula): Theorem =
+    Theorem(Iff(Exists(x, And(p, q)), And(Exists(x, p), Exists(x, q))))
+  }
+
+  /** Axiom `forall x. (P \/ Q) <=> (forall x. P \/ forall x. Q)`, given that x is not an identifier in both P and Q. */
+  def forallDistriOr(x: Identifier, p: Formula, q: Formula): Theorem = {
+    if (p.ids.contains(x) && q.ids.contains(x)) {
+      throw new IllegalArgumentException(
+        "Illegal application of forallDistriOr: identifier is in both formulae P and Q."
+      )
+    }
+
     Theorem(Iff(Forall(x, Or(p, q)), Or(Forall(x, p), Forall(x, q))))
+  }
 
   /** Axiom `exists x. (P \/ Q) <=> (exists x. P \/ exists x. Q)`. */
   def existsDistriOr(x: Identifier, p: Formula, q: Formula): Theorem =

@@ -31,10 +31,10 @@ def existsIffPNF(x: Identifier, p: Formula): Theorem = ???
 /** Axiom `forall x. (P /\ Q) <=> (forall x. P /\ forall x. Q)`. */
 def forallDistriAnd(x: Identifier, p: Formula, q: Formula): Theorem = ???
 
-/** Axiom `exists x. (P /\ Q) <=> (exists x. P /\ exists x. Q)`. */
+/** Axiom `exists x. (P /\ Q) <=> (exists x. P /\ exists x. Q)`, given that x is not an identifier in both P and Q. */
 def existsDistriAnd(x: Identifier, p: Formula, q: Formula): Theorem = ???
 
-/** Axiom `forall x. (P \/ Q) <=> (forall x. P \/ forall x. Q)`. */
+/** Axiom `forall x. (P \/ Q) <=> (forall x. P \/ forall x. Q)`, given that x is not an identifier in both P and Q. */
 def forallDistriOr(x: Identifier, p: Formula, q: Formula): Theorem = ???
 
 /** Axiom `exists x. (P \/ Q) <=> (exists x. P \/ exists x. Q)`. */
@@ -85,7 +85,7 @@ def isSNF(formula: Formula): Boolean = ???
 def toSNF(formula: Formula): Formula = ???
 
 /** Given a `formula`, generate a theorem for the equisatisfiability with its skolem normal form:
-  *  Theorem(Equisat(formula, toSNF(formula)))
+  *   Theorem(Equisat(formula, toSNF(formula)))
 */
 def toSNFThmEqui(formula: Formula): Theorem = ???
 ```
