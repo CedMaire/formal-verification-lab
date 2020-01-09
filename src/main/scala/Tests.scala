@@ -652,152 +652,166 @@ object Tests {
 
   def testToSNF() {
     val formula0 = toPNF(
-      Forall(
-        "x0",
-        And(
-          Forall(
-            "x1",
-            Not(
-              Or(
-                Iff(
-                  Equals(Var("x0"), Var("x1")),
-                  Equals(Var("x1"), Var("x0"))
-                ),
-                PredApp("P", Vector(Var("x0"), Var("x1"), Con("x2")))
+      toNNF(
+        Forall(
+          "x0",
+          And(
+            Forall(
+              "x1",
+              Not(
+                Or(
+                  And(
+                    Equals(Var("x0"), Var("x1")),
+                    Equals(Var("x1"), Var("x0"))
+                  ),
+                  PredApp("P", Vector(Var("x0"), Var("x1"), Con("x2")))
+                )
               )
-            )
-          ),
-          Forall(
-            "x1",
-            Implies(
-              PredApp("P", Vector(Con("x0"), Con("x1"), Var("x0"))),
-              PredApp("P", Vector(Con("x0"), Var("x1"), Con("x2")))
+            ),
+            Forall(
+              "x1",
+              Or(
+                PredApp("P", Vector(Con("x0"), Con("x1"), Var("x0"))),
+                PredApp("P", Vector(Con("x0"), Var("x1"), Con("x2")))
+              )
             )
           )
         )
       )
     )
     val formula1 = toPNF(
-      Exists(
-        "x0",
-        And(
-          Exists(
-            "x1",
-            Not(
-              Or(
-                Iff(
-                  Equals(Var("x0"), Var("x1")),
-                  Equals(Var("x1"), Var("x0"))
-                ),
-                PredApp("P", Vector(Var("x0"), Var("x1"), Con("x2")))
+      toNNF(
+        Exists(
+          "x0",
+          And(
+            Exists(
+              "x1",
+              Not(
+                Or(
+                  And(
+                    Equals(Var("x0"), Var("x1")),
+                    Equals(Var("x1"), Var("x0"))
+                  ),
+                  PredApp("P", Vector(Var("x0"), Var("x1"), Con("x2")))
+                )
               )
-            )
-          ),
-          Exists(
-            "x1",
-            Implies(
-              PredApp("P", Vector(Con("x0"), Con("x1"), Var("x0"))),
-              PredApp("P", Vector(Con("x0"), Var("x1"), Con("x2")))
+            ),
+            Exists(
+              "x1",
+              Or(
+                PredApp("P", Vector(Con("x0"), Con("x1"), Var("x0"))),
+                PredApp("P", Vector(Con("x0"), Var("x1"), Con("x2")))
+              )
             )
           )
         )
       )
     )
     val formula2 = toPNF(
-      Forall(
-        "x0",
-        And(
-          Exists(
-            "x1",
-            Not(
-              Or(
-                Iff(
-                  Equals(Var("x0"), Var("x1")),
-                  Equals(Var("x1"), Var("x0"))
-                ),
-                PredApp("P", Vector(Var("x0"), Var("x1"), Con("x2")))
+      toNNF(
+        Forall(
+          "x0",
+          And(
+            Exists(
+              "x1",
+              Not(
+                Or(
+                  And(
+                    Equals(Var("x0"), Var("x1")),
+                    Equals(Var("x1"), Var("x0"))
+                  ),
+                  PredApp("P", Vector(Var("x0"), Var("x1"), Con("x2")))
+                )
               )
-            )
-          ),
-          Exists(
-            "x1",
-            Implies(
-              PredApp("P", Vector(Con("x0"), Con("x1"), Var("x0"))),
-              PredApp("P", Vector(Con("x0"), Var("x1"), Con("x2")))
+            ),
+            Exists(
+              "x1",
+              Or(
+                PredApp("P", Vector(Con("x0"), Con("x1"), Var("x0"))),
+                PredApp("P", Vector(Con("x0"), Var("x1"), Con("x2")))
+              )
             )
           )
         )
       )
     )
     val formula3 = toPNF(
-      Exists(
-        "x0",
-        And(
-          Forall(
-            "x1",
-            Not(
-              Or(
-                Iff(
-                  Equals(Var("x0"), Var("x1")),
-                  Equals(Var("x1"), Var("x0"))
-                ),
-                PredApp("P", Vector(Var("x0"), Var("x1"), Con("x2")))
+      toNNF(
+        Exists(
+          "x0",
+          And(
+            Forall(
+              "x1",
+              Not(
+                Or(
+                  And(
+                    Equals(Var("x0"), Var("x1")),
+                    Equals(Var("x1"), Var("x0"))
+                  ),
+                  PredApp("P", Vector(Var("x0"), Var("x1"), Con("x2")))
+                )
               )
-            )
-          ),
-          Forall(
-            "x1",
-            Implies(
-              PredApp("P", Vector(Con("x0"), Con("x1"), Var("x0"))),
-              PredApp("P", Vector(Con("x0"), Var("x1"), Con("x2")))
+            ),
+            Forall(
+              "x1",
+              Or(
+                PredApp("P", Vector(Con("x0"), Con("x1"), Var("x0"))),
+                PredApp("P", Vector(Con("x0"), Var("x1"), Con("x2")))
+              )
             )
           )
         )
       )
     )
     val formula4 = toPNF(
-      Forall(
-        "x0",
-        And(
-          Forall(
-            "x1",
-            Not(
-              Or(
-                Iff(
-                  Exists("x2", Implies(PredApp("P", Vector(Var("x2"))), True)),
-                  Equals(Var("x1"), Var("x0"))
-                ),
-                PredApp("P", Vector(Var("x0"), Var("x1"), Con("x2")))
+      toNNF(
+        Forall(
+          "x0",
+          And(
+            Forall(
+              "x1",
+              Not(
+                Or(
+                  And(
+                    Exists(
+                      "x2",
+                      Implies(PredApp("P", Vector(Var("x2"))), True)
+                    ),
+                    Equals(Var("x1"), Var("x0"))
+                  ),
+                  PredApp("P", Vector(Var("x0"), Var("x1"), Con("x2")))
+                )
               )
-            )
-          ),
-          Forall(
-            "x1",
-            Implies(
-              Exists("x2", Implies(False, PredApp("P", Vector(Var("x2"))))),
-              PredApp("P", Vector(Con("x0"), Var("x1"), Con("x2")))
+            ),
+            Forall(
+              "x1",
+              Or(
+                Exists("x2", Implies(False, PredApp("P", Vector(Var("x2"))))),
+                PredApp("P", Vector(Con("x0"), Var("x1"), Con("x2")))
+              )
             )
           )
         )
       )
     )
-
     val formula5 = toPNF(
-      Forall(
-        "x0",
+      toNNF(
         Forall(
-          "x1",
-          Exists(
-            "x2",
-            Forall(
-              "x3",
+          "x0",
+          Forall(
+            "x1",
+            Exists(
+              "x2",
               Forall(
-                "x4",
-                Exists(
-                  "x5",
-                  Implies(
-                    PredApp("P", Vector(Var("x2"))),
-                    PredApp("Q", Vector(Var("x5")))
+                "x3",
+                Forall(
+                  "x4",
+                  Exists(
+                    "x5",
+                    And(
+                      PredApp("P", Vector(Var("x2"))),
+                      PredApp("Q", Vector(Var("x5")))
+                    )
                   )
                 )
               )

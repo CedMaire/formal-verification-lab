@@ -5,12 +5,6 @@ import Theorems._
 
 object Main {
   def main(args: Array[String]): Unit = {
-    // testIsPNF()
-    // testUniqueVars()
-    // testToPNF()
-    // testPNFLemmas()
-    // testToPNFThm()
-    // testIsSNF()
     // testToSNF()
   }
 }
