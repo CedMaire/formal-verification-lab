@@ -1,3 +1,4 @@
+
 import fol._
 
 /** Minimal proof system for first-order logic.
@@ -12,11 +13,10 @@ package object lcf {
     * The constructor of the class is private so that the only way to
     * obtain a theorem is to use the provided axioms and combinators.
     */
-  final class Theorem private (val formula: Formula) {
+  final class Theorem private(val formula: Formula) {
 
     override def equals(that: Any): Boolean = {
-      that
-        .isInstanceOf[Theorem] && that.asInstanceOf[Theorem].formula == formula
+      that.isInstanceOf[Theorem] && that.asInstanceOf[Theorem].formula == formula
     }
 
     override def toString: String = formula.toString
@@ -35,10 +35,7 @@ package object lcf {
       case Iff(lhs, rhs) =>
         modusPonens(modusPonens(iffToImplies1(lhs, rhs), this), that)
       case Forall(identifier, Implies(lhs, rhs)) =>
-        modusPonens(
-          modusPonens(forallImplies(identifier, lhs, rhs), this),
-          that
-        )
+        modusPonens(modusPonens(forallImplies(identifier, lhs, rhs), this), that)
       case _ => throw new IllegalArgumentException("Invalid application.")
     }
   }
@@ -56,8 +53,7 @@ package object lcf {
     */
   def modusPonens(pq: Theorem, p: Theorem): Theorem = pq.formula match {
     case Implies(pf, qf) if p.formula == pf => Theorem(qf)
-    case _ =>
-      throw new IllegalArgumentException("Illegal application of modusPonens.")
+    case _ => throw new IllegalArgumentException("Illegal application of modusPonens.")
   }
 
   /** Generalisation.
@@ -76,26 +72,21 @@ package object lcf {
 
   /** Axiom `(P => Q => R) => (P => Q) => P => R`. */
   def impliesDistr(p: Formula, q: Formula, r: Formula): Theorem =
-    Theorem(
-      Implies(Implies(p, Implies(q, r)), Implies(Implies(p, q), Implies(p, r)))
-    )
+    Theorem(Implies(Implies(p, Implies(q, r)), Implies(Implies(p, q), Implies(p, r))))
 
-  /** Axiom `((P => False) => False) => P`. */
+  /** Axiom `((P => False) => False) => P` */
   def doubleNegation(p: Formula): Theorem =
     Theorem(Implies(Implies(Implies(p, False), False), p))
 
   /** Axiom `(forall x. P => Q) => (forall x. P) => forall x. Q`. */
   def forallImplies(x: Identifier, p: Formula, q: Formula): Theorem =
-    Theorem(
-      Implies(Forall(x, Implies(p, q)), Implies(Forall(x, p), Forall(x, q)))
-    )
+    Theorem(Implies(Forall(x, Implies(p, q)), Implies(Forall(x, p), Forall(x, q))))
 
   /** Axiom `P => forall x. P`, given that x is not free in P. */
   def forallIntro(x: Identifier, p: Formula): Theorem = {
     if (p.free.contains(x)) {
       throw new IllegalArgumentException(
-        "Illegal application of forallIntro: identifier is free in the formula."
-      )
+        "Illegal application of forallIntro: identifier is free in the formula.")
     }
 
     Theorem(Implies(p, Forall(x, p)))
@@ -105,8 +96,7 @@ package object lcf {
   def existsEquals(x: Identifier, e: Expr): Theorem = {
     if (e.free.contains(x)) {
       throw new IllegalArgumentException(
-        "Illegal application of existsEquals: identifier is free in the expression."
-      )
+        "Illegal application of existsEquals: identifier is free in the expression.")
     }
 
     Theorem(Exists(x, Equals(Var(x), e)))
@@ -120,8 +110,7 @@ package object lcf {
   def funCongruence(f: Function, as: Seq[Expr], bs: Seq[Expr]): Theorem = {
     if (as.length != bs.length) {
       throw new IllegalArgumentException(
-        "Illegal application of funCongruence: Sequences do not have matching lengths."
-      )
+        "Illegal application of funCongruence: Sequences do not have matching lengths.")
     }
 
     val base: Formula = Equals(FunApp(f, as), FunApp(f, bs))
@@ -137,8 +126,7 @@ package object lcf {
   def predCongruence(p: Predicate, as: Seq[Expr], bs: Seq[Expr]): Theorem = {
     if (as.length != bs.length) {
       throw new IllegalArgumentException(
-        "Illegal application of predCongruence: Sequences do not have matching lengths."
-      )
+        "Illegal application of predCongruence: Sequences do not have matching lengths.")
     }
 
     val base: Formula = Implies(PredApp(p, as), PredApp(p, bs))
@@ -152,12 +140,7 @@ package object lcf {
 
   /** Axiom `a1 = b1 => a2 = b2 => a1 = a2 => b1 = b2`. */
   def equCongruence(a1: Expr, a2: Expr, b1: Expr, b2: Expr): Theorem = {
-    Theorem(
-      Implies(
-        Equals(a1, b1),
-        Implies(Equals(a2, b2), Implies(Equals(a1, a2), Equals(b1, b2)))
-      )
-    )
+    Theorem(Implies(Equals(a1, b1), Implies(Equals(a2, b2), Implies(Equals(a1, a2), Equals(b1, b2)))))
   }
 
   /** Axiom `(p => q) => (q => p) => (p <=> q)`. */
@@ -191,6 +174,11 @@ package object lcf {
   /** Axiom `(exists x. P) <=> ¬(forall x. ¬P)`. */
   def existsIff(x: Identifier, p: Formula): Theorem =
     Theorem(Iff(Exists(x, p), Not(Forall(x, Not(p)))))
+
+  /** Axiom `p => q <=> (~p \/ q)`. */
+  def orImpliesIff(p: Formula, q: Formula): Theorem =
+    Theorem(Iff(Implies(p,q), Or(Not(p), q)))
+  
 
   /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -268,3 +256,4 @@ package object lcf {
   /** ONLY USED FOR TESTING PURPOSES */
   def unsafeTheorem(formula: Formula): Theorem = Theorem(formula)
 }
+
