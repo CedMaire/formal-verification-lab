@@ -1,4 +1,14 @@
-Given a formula `F` we are able to do the following transformations:
+# LAB7 - personalized
+### Cédric Maine & Clément Blaudeau
+
+## Introduction
+In this lab we extended the transformation functions of lab4 in an lcf style. Given a formula `F` we are able to do the following transformations:
+
+ * Negation normal form
+ * Prenex normal form
+ * Skolem normal form
+
+The corresponding scala functions are the following :
 
 ```scala
 F_nnf = toNNF(F)
@@ -6,22 +16,17 @@ F_pnf = toPNF(F_nnf)
 F_snf = toSNF(F_pnf)
 ```
 
-where `NNF` means `Negation Normal Form`, `PNF` means `Prenex Normal Form` and `SNF` means `Skolem Normal Form`.
-
-We are also able to generate the following theorems:
+Alongside the transformation, we provide functions that generate the following theorems:
 
 ```scala
-F     <=> F_nnf
-F_nnf <=> F_pnf
+F <=> toNNF(F)
+F <=> toPNF(F)
 ```
 
-and thus also
+As the skolem normal form is not equivalent to the inital formula (but only equisatisfiable), we don't have an equivalence theorem for it.
 
-```scala
-F <=> F_pnf
-```
 
----
+## 1) Modifications of the lab4 files
 
 In `fol/src/main/scala/fol/Formulas.scala` we added the following values that compute a set of all identifiers in a given formula (constants, vars, functions, predicates):
 
@@ -33,7 +38,7 @@ lazy val ids: Set[Identifier] = ...
 lazy val ids: Set[Identifier] = ...
 ```
 
-In `lcf/src/main/scala/lcf/package.scala` we added the following "axioms":
+In `lcf/src/main/scala/lcf/package.scala` we added the following "axioms" to simplify proofs :
 
 ```scala
 /** These might not always be axioms but we don't know how far to go for the lab. */
@@ -65,13 +70,13 @@ def forallDistriOr(x: Identifier, p: Formula, q: Formula): Theorem = ...
 /** Axiom `exists x. (P \/ Q) <=> (exists x. P \/ exists x. Q)`. */
 def existsDistriOr(x: Identifier, p: Formula, q: Formula): Theorem = ...
 
-/** ONLY USED FOR TESTING PURPOSES */
-def unsafeTheorem(formula: Formula): Theorem = ...
 ```
 
 We moved lab04 in `src/main/scala/NF.scala`.
 
-`src/main/scala/NNF.scala` contains everything related to the Negation Normal Form:
+## 2) Negation normal form
+
+`src/main/scala/NNF.scala` contains everyting related to the Negation Normal Form. A formula in NNF only has negation over atomic formulas, and only uses AND and OR operators (and quantifiers).
 
 ```scala
 /*
@@ -90,7 +95,8 @@ def toNNF(formula: Formula): Formula = ...
 def toNNFThm(formula: Formula): Theorem = ...
 ```
 
-`src/main/scala/PNF.scala` contains everything related to the Prenex Normal Form:
+## 3) Prenex normal form
+`src/main/scala/PNF.scala` contains everything related to the Prenex Normal Form. A formula in PNF factors all the quantifiers at the top level of the formula.
 
 ```scala
 /*
@@ -109,7 +115,8 @@ def toPNF(formula: Formula): Formula = ...
 def toPNFThm(formula: Formula): Theorem = ...
 ```
 
-`src/main/scala/SNF.scala` contains everything related to the Skolem Normal Form:
+## 4) Skolem normal form
+`src/main/scala/SNF.scala` contains everything related to the Skolem Normal Form. *Skolemization* is used to remove existential quantifiers. Equivalence is not guaranteed.
 
 ```scala
 /*
@@ -121,9 +128,7 @@ def isSNF(formula: Formula): Boolean = ...
   Transforms the given `formula` in skolem normal form.
 */
 def toSNF(formula: Formula): Formula = ...
-
-/** Given a `formula`, generate a theorem for the equisatisfiability with its skolem normal form:
-  *   Theorem(Equisat(formula, toSNF(formula)))
-*/
-def toSNFThmEqui(formula: Formula): Theorem = ...
 ```
+
+## 5) Equisatisfiability problem
+As the original axioms were designed to facilitate the "Implication normal form" of lab4, we found it quite challenging to write the equivalence theorems for negation and prenex normal form. Running short of time, we were not able to write an *equisatisfiability* theorem. To do so, we would need to define a notion of *model* of a first order logic formula, and an *evaluation* function.
