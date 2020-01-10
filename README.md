@@ -74,13 +74,9 @@ def existsDistriOr(x: Identifier, p: Formula, q: Formula): Theorem = ...
 
 We moved lab04 in `src/main/scala/NF.scala`.
 
-<<<<<<< HEAD
 ## 2) Negation normal form
 
 `src/main/scala/NNF.scala` contains everyting related to the Negation Normal Form. A formula in NNF only has negation over atomic formulas, and only uses AND and OR operators (and quantifiers).
-=======
-`src/main/scala/NNF.scala` contains everything related to the Negation Normal Form:
->>>>>>> 626192ce23c29672106b28b427580b019792db83
 
 ```scala
 /*
@@ -94,11 +90,7 @@ def isNNF(formula: Formula): Boolean = ...
 def toNNF(formula: Formula): Formula = ...
 
 /** Given a `formula`, generate a theorem for the equivalence with its negation normal form:
-<<<<<<< HEAD
-  *   formula <=> toPNF(formula)
-=======
   *   formula <=> toNNF(formula)
->>>>>>> 626192ce23c29672106b28b427580b019792db83
 */
 def toNNFThm(formula: Formula): Theorem = ...
 ```
