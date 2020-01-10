@@ -4,8 +4,39 @@ import PNF._
 import SNF._
 import lcf._
 import fol._
+import Theorems._
 
 object Tests {
+
+  def checkNNFPNFSKNFlow(f: Formula): Boolean = {
+    val f_unique = uniqueVars(f)
+
+    println("\n\n\n##### Formulas #####")
+    println("F:     " + f_unique.pretty)
+
+    val f_nnf = toNNF(f_unique)
+    println("F_nnf: " + f_nnf.pretty)
+
+    val f_pnf = toPNF(f_nnf)
+    println("F_pnf: " + f_pnf.pretty)
+
+    val f_snf = toSNF(f_pnf)
+    println("F_snf: " + f_snf.pretty)
+
+    println("\n\n\n##### Theorems #####")
+    val thm_f_f_nnf = toNNF_thm(f_unique)
+    println("(F     <=> F_nnf): " + thm_f_f_nnf.pretty)
+
+    val thm_f_nnf_f_pnf = toPNFThm(f_nnf)
+    println("(F_nnf <=> F_pnf): " + thm_f_nnf_f_pnf.pretty)
+
+    val thm_f_f_pnf = iffTrans(thm_f_f_nnf, thm_f_nnf_f_pnf)
+    println("(F     <=> F_pnf): " + thm_f_f_pnf.pretty)
+
+    print("\n\n\n")
+
+    true
+  }
 
   def checkNormalFormTheorem(f: Formula): Boolean = {
     val nf = toNormalForm(f)
@@ -69,15 +100,25 @@ object Tests {
     lazy val prettyF = f.pretty
     toNNF_thm(f).formula match {
       case Iff(f1, f2) =>
-        assert(f1 == f, s"The left-hand-side of `toNNF_Thm($prettyF)` should be $prettyF. Got ${f1.pretty} instead.")
-        assert(f2 == nf, s"The right-hand side of `toNNF_Thm($prettyF)` should be ${nf.pretty}. Got ${f2.pretty} instead.")
-        assert(isNNF(nf), s"The NNF of $f should be in NNF. Got ${nf.pretty} instead.")
+        assert(
+          f1 == f,
+          s"The left-hand-side of `toNNF_Thm($prettyF)` should be $prettyF. Got ${f1.pretty} instead."
+        )
+        assert(
+          f2 == nf,
+          s"The right-hand side of `toNNF_Thm($prettyF)` should be ${nf.pretty}. Got ${f2.pretty} instead."
+        )
+        assert(
+          isNNF(nf),
+          s"The NNF of $f should be in NNF. Got ${nf.pretty} instead."
+        )
       case _ =>
-        throw new Exception(s"`toNNF_Thm($prettyF)` should return an `Iff` formula")
+        throw new Exception(
+          s"`toNNF_Thm($prettyF)` should return an `Iff` formula"
+        )
     }
     true
   }
-
 
   def testIsPNF() {
     assert(isPNF(True))
