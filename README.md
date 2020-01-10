@@ -138,3 +138,10 @@ def toSNF(formula: Formula): Formula = ...
 
 ## 5) Equisatisfiability problem
 As the original axioms were designed to facilitate the "Implication normal form" of lab4, we found it quite challenging to write the equivalence theorems for negation and prenex normal form. Running short of time, we were not able to write an *equisatisfiability* theorem. To do so, we would need to define a notion of *model* of a first order logic formula, and an *evaluation* function.
+
+## Run
+For an example simply execute:
+
+```bash
+$ sbt run
+```
