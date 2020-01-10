@@ -1,5 +1,5 @@
 # LAB7 - personalized
-### Cédric Maine & Clément Blaudeau
+### Cedric Maire & Clément Blaudeau
 
 ## Introduction
 In this lab we extended the transformation functions of lab4 in an lcf style. Given a formula `F` we are able to do the following transformations:
@@ -19,8 +19,14 @@ F_snf = toSNF(F_pnf)
 Alongside the transformation, we provide functions that generate the following theorems:
 
 ```scala
-F <=> toNNF(F)
-F <=> toPNF(F)
+F     <=> toNNF(F)
+F_nnf <=> toPNF(F_nnf)
+```
+
+thus we are able to prove:
+
+```scala
+F <=> toPNF(toNNF(F))
 ```
 
 As the skolem normal form is not equivalent to the inital formula (but only equisatisfiable), we don't have an equivalence theorem for it.
