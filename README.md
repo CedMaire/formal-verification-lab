@@ -71,7 +71,7 @@ def unsafeTheorem(formula: Formula): Theorem = ...
 
 We moved lab04 in `src/main/scala/NF.scala`.
 
-`src/main/scala/NNF.scala` contains everyting related to the Negation Normal Form:
+`src/main/scala/NNF.scala` contains everything related to the Negation Normal Form:
 
 ```scala
 /*
@@ -80,12 +80,12 @@ We moved lab04 in `src/main/scala/NF.scala`.
 def isNNF(formula: Formula): Boolean = ...
 
 /*
-  Transforms the given `formula` in prenex normal form.
+  Transforms the given `formula` in negation normal form.
 */
 def toNNF(formula: Formula): Formula = ...
 
-/** Given a `formula`, generate a theorem for the equivalence with its prenex normal form:
-  *   formula <=> toPNF(formula)
+/** Given a `formula`, generate a theorem for the equivalence with its negation normal form:
+  *   formula <=> toNNF(formula)
 */
 def toNNFThm(formula: Formula): Theorem = ...
 ```
